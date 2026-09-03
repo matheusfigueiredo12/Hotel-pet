@@ -141,7 +141,7 @@ class _AnimalFormScreenState extends State<AnimalFormScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _species,
+              initialValue: _species,
               decoration: const InputDecoration(
                 labelText: 'Espécie',
                 border: OutlineInputBorder(),
