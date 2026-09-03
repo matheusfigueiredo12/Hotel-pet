@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io' show Platform;
 
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 
 import '../models/animal.dart';
@@ -15,21 +13,10 @@ class ApiException implements Exception {
 }
 
 class ApiService {
-  // Ajuste este endereço conforme o ambiente de execução:
-  // - Emulador Android: 10.0.2.2 aponta para o localhost da máquina host.
-  // - iOS simulator, Web ou Desktop: localhost funciona normalmente.
-  // - Dispositivo físico: use o IP da máquina onde o back-end está rodando.
-  static String get _host {
-    if (kIsWeb) return 'localhost';
-    try {
-      if (Platform.isAndroid) return '10.0.2.2';
-    } catch (_) {
-      // Platform indisponível (ex.: testes); usa localhost como padrão.
-    }
-    return 'localhost';
-  }
-
-  static String get baseUrl => 'http://$_host:3000/api';
+  // Endereço do back-end. Por padrão aponta para o servidor Node.js rodando
+  // em localhost:3000. Se o navegador acessar a aplicação a partir de outra
+  // máquina (ex.: back-end rodando em um servidor remoto), ajuste esta URL.
+  static const String baseUrl = 'http://localhost:3000/api';
 
   Future<List<Animal>> fetchAnimals() async {
     final response = await http.get(Uri.parse('$baseUrl/animals'));

@@ -3,7 +3,7 @@
 Aplicação para controle de animais hospedados em um hotel para pets, com:
 
 - **Back-end**: Node.js + Express (API REST), persistência em arquivo JSON.
-- **Front-end**: Flutter, consumindo a API REST.
+- **Front-end**: Flutter Web, consumindo a API REST — aplicação web para uso no navegador.
 
 ## Funcionalidades
 
@@ -49,33 +49,42 @@ O servidor sobe em `http://localhost:3000`. Endpoints disponíveis:
 
 Os dados são persistidos em `backend/data/animals.json`.
 
-## Como executar o Front-end
+## Como executar o Front-end (navegador)
 
-Pré-requisito: [Flutter SDK](https://docs.flutter.dev/get-started/install) instalado.
+Pré-requisito: [Flutter SDK](https://docs.flutter.dev/get-started/install) instalado,
+com suporte a Web habilitado (`flutter config --enable-web`, já é o padrão em
+versões recentes do Flutter).
 
-O repositório já contém o código-fonte (`lib/`) e o `pubspec.yaml` do app. Como as
-pastas de plataforma (`android/`, `ios/`, `web/` etc.) são geradas pelo próprio
-Flutter e variam conforme a máquina, gere-as localmente antes de rodar o app:
+O repositório já contém o código-fonte (`lib/`) e o `pubspec.yaml` do app. A pasta
+`web/` é gerada pelo próprio Flutter e varia conforme a máquina, então gere-a
+localmente antes de rodar o app:
 
 ```bash
 cd frontend
-flutter create .        # gera as pastas de plataforma (android, ios, web...)
+flutter create --platforms=web .   # gera a pasta web/
 flutter pub get
-flutter run              # escolha o dispositivo/emulador desejado
+flutter run -d chrome               # abre a aplicação no navegador Chrome
 ```
+
+Para gerar uma versão de produção (arquivos estáticos):
+
+```bash
+flutter build web
+```
+
+Os arquivos ficam em `frontend/build/web`, podendo ser servidos por qualquer
+servidor HTTP estático.
 
 ### Apontando o app para o back-end
 
-O endereço da API é definido em `frontend/lib/services/api_service.dart`. Por padrão:
+O endereço da API é definido em `frontend/lib/services/api_service.dart`
+(`baseUrl`), apontando por padrão para `http://localhost:3000/api`. Se o
+back-end estiver rodando em outra máquina, ajuste esse valor para o endereço
+correspondente (ex.: `http://192.168.0.10:3000/api`).
 
-- **Emulador Android**: usa `10.0.2.2` (aponta para o `localhost` da máquina host)
-  automaticamente.
-- **Web, Desktop ou iOS Simulator**: usa `localhost` automaticamente.
-- **Dispositivo físico**: edite o método `_host` em `api_service.dart` e informe o
-  IP da máquina onde o back-end está rodando (ex.: `192.168.0.10`), já que
-  `localhost` no celular se refere ao próprio celular.
-
-Certifique-se de que o back-end (`npm start`) esteja rodando antes de abrir o app.
+Certifique-se de que o back-end (`npm start`) esteja rodando antes de abrir o app
+no navegador — o Express já está configurado com CORS liberado para aceitar
+as requisições do Flutter Web.
 
 ## Cálculo automático das diárias
 
